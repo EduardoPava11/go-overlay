@@ -21,8 +21,10 @@ async fn handle_request(req: Request<Body>) -> Result<Response<Body>, hyper::Err
             if param.starts_with("col=") { col = param[4..].parse::<usize>().ok(); }
         }
         if let (Some(r), Some(c)) = (row, col) {
-            BOARD.lock().unwrap().place_stone(r, c, Stone::Black);
+            let mut board = BOARD.lock().unwrap();
+            board.place_stone(r, c, Stone::Black);
             println!("Placed black stone at row {}, col {}", r, c);
+            board.print_board();
             Ok(Response::new(Body::from("OK")))
         } else {
             Ok(Response::builder()
