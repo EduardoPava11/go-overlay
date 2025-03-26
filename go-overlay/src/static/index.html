@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Go Overlay</title>
+    <style>
+        html, body { margin: 0; background: transparent; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<canvas id="board" width="540" height="540"></canvas>
+<script>
+    const canvas = document.getElementById('board');
+    const ctx = canvas.getContext('2d');
+    const size = 60;
+
+    function drawGrid() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'black';
+        for (let i = 0; i <= 9; i++) {
+            let pos = i * size;
+            ctx.beginPath();
+            ctx.moveTo(pos, 0);
+            ctx.lineTo(pos, 540);
+            ctx.moveTo(0, pos);
+            ctx.lineTo(540, pos);
+            ctx.stroke();
+        }
+    }
+
+    function drawStone(row, col, color) {
+        ctx.beginPath();
+        ctx.arc(col * size + size / 2, row * size + size / 2, 20, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const row = Math.floor(y / size);
+        const col = Math.floor(x / size);
+        fetch(`/click?row=${row}&col=${col}`).then(() => {
+            console.log(`Clicked on ${row}, ${col}`);
+        });
+    });
+
+    drawGrid();
+</script>
+</body>
+</html>
