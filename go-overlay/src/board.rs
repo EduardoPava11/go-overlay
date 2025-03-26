@@ -22,4 +22,27 @@ impl Board {
             self.grid[row][col] = stone;
         }
     }
+    
+    pub fn print_board(&self) {
+        println!();
+        print!("   ");
+        for col in 0..9 {
+            print!(" {:>2}", col);
+        }
+        println!();
+
+        for (row_idx, row) in self.grid.iter().enumerate() {
+            print!("{:>2} ", row_idx);
+            for &stone in row {
+                let symbol = match stone {
+                    Stone::Black => "●",
+                    Stone::White => "○",
+                    Stone::Empty => "+",
+                };
+                print!("  {}", symbol);
+            }
+            println!();
+        }
+        println!("\n\n");
+    }
 }
